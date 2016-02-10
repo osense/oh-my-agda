@@ -41,12 +41,14 @@ applicativeId : Applicative id
 applicativeId = record {pure = id; _⊛_ = map}
 
 
--- I don't actually know what's going on here.
+-- Hmm.
 applicativeComp : ∀ {F G} → Applicative F → Applicative G → Applicative (F ∘ G)
 applicativeComp F G = record
   {pure = Applicative.pure F ∘ Applicative.pure G
-  ;_⊛_  = let aG = Applicative._⊛_ G in
-          λ f x → (F Applicative.⊛ (F Applicative.⊛ (Applicative.pure F aG)) f) x}
+  ;_⊛_  = let pureF = Applicative.pure F in
+          let apF = Applicative._⊛_ F in
+          let apG = Applicative._⊛_ G in
+          λ f x → (F Applicative.⊛ (apF (pureF apG)) f) x}
 
 
 record Monoid (X : Set) : Set where
