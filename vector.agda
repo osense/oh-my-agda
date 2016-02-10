@@ -64,3 +64,11 @@ reverse (x :: xs) = snoc (reverse xs) x
 --diagonal' : ∀ {A n m} → Vec (Vec A m) n → Vec A n
 --diagonal' [] = []
 --diagonal' {n = succ n} (xs :: xss) = {!proj (reverse xs) (fin n) :: diagonal' {n = n} xss!}
+
+
+mapp : ∀ {n m A B} → Vec (Vec (A → B) n) m → Vec (Vec A n) m → Vec (Vec B n) m
+mapp [] [] = []
+mapp (f :: fs) (x :: xs) = vapp f x :: mapp fs xs
+
+mapp' : ∀ {n A B} → Vec (Vec (A → B) n) n → Vec (Vec A n) n → Vec (Vec B n) n
+mapp' fm xm = vapp (vapp (vec vapp) fm) xm

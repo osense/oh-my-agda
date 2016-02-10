@@ -25,8 +25,15 @@ fin : ∀ (n : ℕ) → Fin (succ n)
 fin zero = zero'
 fin (succ n) = succ' (fin n)
 
-_∘_ : ∀ {A B C : Set} → (B → C) → (A → B) → (A → C)
+
+id : ∀ {k} {A : Set k} → A → A
+id x = x
+
+_∘_ : ∀ {k} {A B C : Set k} → (B → C) → (A → B) → (A → C)
 f ∘ g = λ a → f (g a)
+
+_$_ : ∀ {A B : Set} → (A → B) → A → B
+f $ x = f x
 
 flip : ∀ {A B C : Set} → (A → B → C) → (B → A → C)
 flip f = λ a b → f b a
