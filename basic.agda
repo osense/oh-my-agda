@@ -13,8 +13,14 @@ zero * b = zero
 (succ a) * b = b + (a * b)
 
 
-data _×_ (A B : Set) : Set where
+data _×_ {k} (A B : Set k) : (Set k) where
   _,_ : A → B → (A × B)
+
+fst : ∀ {k} {A B : Set k} → (A × B) → A
+fst (a , b) = a
+
+snd : ∀ {k} {A B : Set k} → (A × B) → B
+snd (a , b) = b
 
 
 data Fin : ℕ → Set where
