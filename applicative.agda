@@ -58,3 +58,9 @@ record Monoid (X : Set) : Set where
   monoidApplicative : Applicative λ _ → X
   monoidApplicative = record {pure = λ _ → ε; _⊛_ = ∙}
 open Monoid {{...}} public
+
+
+applicativePointwise : ∀ {F G} {X : Set} → Applicative F → Applicative G → Applicative (λ X → (F X) × (G X))
+applicativePointwise F G = record
+  {pure = λ x → pure x , pure x
+  ;_⊛_ = λ h x → (fst h ⊛ fst x) , (snd h ⊛ snd x)}
