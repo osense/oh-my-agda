@@ -12,15 +12,20 @@ _*_ : ℕ → ℕ → ℕ
 zero * b = zero
 (succ a) * b = b + (a * b)
 
+data _≤_ : ℕ → ℕ → Set where
+  z≤n : ∀ {k : ℕ} → zero ≤ k
+  s≤s : ∀ {n m : ℕ} {s≤s : n ≤ m} → succ n ≤ succ m
+  
 
-data _×_ {k} (A B : Set k) : (Set k) where
-  _,_ : A → B → (A × B)
+record Σ {a} (A : Set a) (B : A → Set a) : Set a where
+  constructor _,_
+  field
+    fst : A
+    snd : B fst
+open Σ public
 
-fst : ∀ {k} {A B : Set k} → (A × B) → A
-fst (a , b) = a
-
-snd : ∀ {k} {A B : Set k} → (A × B) → B
-snd (a , b) = b
+_×_ : ∀ {k} (A B : Set k) → Set k
+A × B = Σ A (λ _ → B)
 
 
 data Fin : ℕ → Set where
