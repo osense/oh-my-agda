@@ -37,7 +37,7 @@ monadVec = record {return = pure; _>>=_ = λ xs f → diagonal (vmap f xs)}
 
 instance endoFunctorId : EndoFunctor id
 endoFunctorId = record {map = _$_}
-applicativeId : Applicative id
+instance applicativeId : Applicative id
 applicativeId = record {pure = id; _⊛_ = map}
 
 
@@ -64,3 +64,20 @@ applicativePointwise : ∀ {F G} {X : Set} → Applicative F → Applicative G �
 applicativePointwise F G = record
   {pure = λ x → pure x , pure x
   ;_⊛_ = λ h x → (fst h ⊛ fst x) , (snd h ⊛ snd x)}
+
+
+record Traversable (F : Set → Set) : Set1 where
+  field
+    traverse : ∀ {G S T} {{_ : Applicative G}} → (S → G T) → F S → G (F T)
+  traversableEndoFunctor : EndoFunctor F
+  traversableEndoFunctor = record {map = traverse}
+open Traversable {{...}} public
+
+instance traversableVec : {n : ℕ} → Traversable λ X → Vec X n
+traversableVec = record {traverse = vtr} where
+  vtr : ∀ {n G S T} {{_ : Applicative G}} → (S → G T) → Vec S n → G (Vec T n)
+  vtr {{aG}} f [] = pure {{aG}} []
+  vtr {{aG}} f (s :: ss) = pure {{aG}} _::_ ⊛ f s ⊛ vtr f ss
+
+transpose : ∀ {n m X} → Vec (Vec X n) m → Vec (Vec X m) n
+transpose = traverse id 
