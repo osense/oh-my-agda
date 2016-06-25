@@ -80,4 +80,4 @@ traversableVec = record {traverse = vtr} where
   vtr {{aG}} f (s :: ss) = pure {{aG}} _::_ ⊛ f s ⊛ vtr f ss
 
 transpose : ∀ {n m X} → Vec (Vec X n) m → Vec (Vec X m) n
-transpose = traverse id 
+transpose = traverse id

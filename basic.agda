@@ -13,8 +13,8 @@ zero * b = zero
 (succ a) * b = b + (a * b)
 
 data _≤_ : ℕ → ℕ → Set where
-  z≤n : ∀ {k : ℕ} → zero ≤ k
-  s≤s : ∀ {n m : ℕ} {s≤s : n ≤ m} → succ n ≤ succ m
+  z≤n : {k : ℕ} → zero ≤ k
+  s≤s : {n m : ℕ} {s≤s : n ≤ m} → succ n ≤ succ m
   
 
 record Σ {a} (A : Set a) (B : A → Set a) : Set a where
