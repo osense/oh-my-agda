@@ -14,6 +14,15 @@ zero ×ℕ b = zero
 {-# BUILTIN NATURAL ℕ #-}
 
 
+data List (X : Set) : Set where
+  ⟨⟩   : List X
+  _::_ : X → List X → List X
+
+_++_ : ∀ {X} → List X → List X → List X
+⟨⟩ ++ ys = ys
+(x :: xs) ++ ys = x :: (xs ++ ys)
+
+
 record Σ {l} (A : Set l) (B : A → Set l) : Set l where
   constructor _,_
   field
@@ -171,20 +180,23 @@ applicativeId = record {pure = id; _⊛_ = map}
 applicativeComp : ∀ {F G} → Applicative F → Applicative G → Applicative (F ∘ G)
 applicativeComp F G = record
   {pure = Applicative.pure F ∘ Applicative.pure G
-    ;_⊛_  = let pureF = Applicative.pure F in
-              let apF = Applicative._⊛_ F in
-                        let apG = Applicative._⊛_ G in
-                                  λ f x → apF (apF (pureF apG) f) x}
+  ;_⊛_  = let pureF = Applicative.pure F in
+            let apF = Applicative._⊛_ F in
+              let apG = Applicative._⊛_ G in
+                λ f x → apF (apF (pureF apG) f) x}
 
 
 record Monoid (X : Set) : Set where
-  infixr 4 ∙
+  infixr 4 _∙_
   field
     ε : X
-    ∙ : X → X → X
+    _∙_ : X → X → X
   monoidApplicative : Applicative λ _ → X
-  monoidApplicative = record {pure = λ _ → ε; _⊛_ = ∙}
+  monoidApplicative = record {pure = λ _ → ε; _⊛_ = _∙_}
 open Monoid {{...}} public
+
+instance monoidNat : Monoid ℕ
+monoidNat = record {ε = zero ; _∙_ = _+ℕ_ }
 
 
 applicativePointwise : ∀ {F G} {X : Set} → Applicative F → Applicative G → Applicative (λ X → (F X) × (G X))
@@ -233,5 +245,59 @@ _+ₙ_ : Normal → Normal → Normal
 (ShF / szF) +ₙ (ShG / szG) = (ShF + ShG) / v (szF ⟨?⟩ szG)
 
 _×ₙ_ : Normal → Normal → Normal
-(ShF / szF) ×ₙ (ShG / szG) = (ShF × ShG) / v (λ f g → (szF f) +ℕ (szG g))
+(ShF / szF) ×ₙ (ShG / szG) = (ShF × ShG) / v (λ f g → szF f +ℕ szG g)
 
+nlnj : ∀ {X} (F G : Normal) → [ F ]ₙ X + [ G ]ₙ X → [ F +ₙ G ]ₙ X
+nlnj F G (tt , (ShF , xs)) = (tt , ShF) , xs
+nlnj F G (ff , (ShG , xs)) = (ff , ShG) , xs
+
+
+data _≃_ {l} {X : Set l} (x : X) : X → Set l where
+  refl : x ≃ x
+infix 1 _≃_
+
+subst : ∀ {k l} {X : Set k} {s t : X} →
+        s ≃ t → (P : X → Set l) → P s → P t
+subst refl P p = p
+
+{-# BUILTIN EQUALITY _≃_ #-}
+{-# BUILTIN REFL refl #-}
+
+record MonoidOk X {{M : Monoid X}} : Set where
+  field
+    absorbL : (x : X) → ε ∙ x ≃ x
+    absorbR : (x : X) → x ∙ ε ≃ x
+    assoc   : (x y z : X) → (x ∙ y) ∙ z ≃ x ∙ (y ∙ z)
+open MonoidOk {{...}} public
+
+natMonoidOk : MonoidOk ℕ
+natMonoidOk = record
+  { absorbL = λ _ → refl
+  ; absorbR = _+zero
+  ; assoc   = assoc+
+  } where
+    _+zero : ∀ x → x +ℕ zero ≃ x
+    zero +zero = refl
+    suc n +zero rewrite n +zero = refl
+
+    assoc+ : ∀ x y z → (x +ℕ y) +ℕ z ≃ x +ℕ (y +ℕ z)
+    assoc+ zero y z = refl
+    assoc+ (suc x) y z rewrite assoc+ x y z = refl
+
+
+instance listMonoid : ∀ {X} → Monoid (List X)
+listMonoid = λ {X} → record { ε = ⟨⟩ ; _∙_ = _++_ }
+
+listMonoidOk : ∀ {X} → MonoidOk (List X)
+listMonoidOk = record
+  { absorbL = λ _ → refl
+  ; absorbR = _++⟨⟩
+  ; assoc   = assoc++
+  } where
+    _++⟨⟩ : ∀ x → x ++ ⟨⟩ ≃ x
+    ⟨⟩ ++⟨⟩ = refl
+    (x :: xs) ++⟨⟩ rewrite xs ++⟨⟩ = refl
+
+    assoc++ : ∀ x y z → (x ++ y) ++ z ≃ x ++ (y ++ z)
+    assoc++ ⟨⟩ y z = refl
+    assoc++ (x :: x₁) y z rewrite assoc++ x₁ y z = refl
