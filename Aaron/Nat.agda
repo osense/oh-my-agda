@@ -28,6 +28,8 @@ zero + n = n
 (suc m) + n = suc (m + n)
 infixl 8 _+_
 
+suc-inj : ∀ {x y : ℕ} → suc x ≡ suc y → x ≡ y
+suc-inj refl = refl
 
 +0 : ∀ (x : ℕ) → x + zero ≡ x
 +0 zero = refl
