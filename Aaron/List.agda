@@ -1,7 +1,8 @@
 module List where
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong₂)
-open import Nat using (𝔹; ⊤; ⊥; if_then_else; ℕ; zero; suc; _+_; _≤_; ≤-trans; ≤-suc)
+open import Nat using (ℕ; zero; suc; _+_; _≤_; ≤-trans; ≤-suc)
+open import Bool
 
 data List {l} (A : Set l) : Set l where
   [] : List A

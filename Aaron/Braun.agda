@@ -1,7 +1,8 @@
 open import Agda.Primitive using (_⊔_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 open import Data.Product using (_×_; _,_)
-open import Nat using (𝔹; ℕ; suc; zero; _+_; suc-inj; +0; +suc; +comm; if_then_else)
+open import Nat using (ℕ; suc; zero; _+_; suc-inj; +0; +suc; +comm)
+open import Bool hiding (_∨_)
 
 module Braun {l} (A : Set l) (_<A_ : A → A → 𝔹) where
 
