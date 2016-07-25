@@ -34,10 +34,8 @@ remove-min (node a empty (node _ _ _ _) (inj₁ ()))
 remove-min (node a empty (node _ _ _ _) (inj₂ ()))
 remove-min (node a (node {n₁} {m₁} a₁ l₁ r₁ p₁) empty p) rewrite +0 (n₁ + m₁) = a , node a₁ l₁ r₁ p₁
 remove-min (node a (node a₁ l₁ r₁ p₁) (node a₂ l₂ r₂ p₂) p)
-  with remove-min (node a₁ l₁ r₁ p₁)
-remove-min (node a (node a₁ l₁ r₁ p₁) (node a₂ l₂ r₂ p₂) p) | _ , l₁' -- _ must be a₁
-  with if a₁ <A a₂ then (a₁ , a₂) else (a₂ , a₁)
-remove-min (node a (node {n₁} {m₁} a₁ l₁ r₁ p₁) (node {n₂} {m₂} a₂ l₂ r₂ p₂) p) | _ , l₁' | smaller , larger
+  with remove-min (node a₁ l₁ r₁ p₁) , if a₁ <A a₂ then (a₁ , a₂) else (a₂ , a₁)
+remove-min (node a (node {n₁} {m₁} a₁ l₁ r₁ p₁) (node {n₂} {m₂} a₂ l₂ r₂ p₂) p) | (_ , l₁') , (smaller , larger) -- _ must be a₁
   rewrite +suc (n₁ + m₁) (n₂ + m₂) | +comm (n₁ + m₁) (n₂ + m₂) = a , node smaller (node larger l₂ r₂ p₂) l₁' (lemma p)
   where lemma : ∀ {x y} → (suc x ≡ y) ∨ (suc x ≡ suc y) → (y ≡ x) ∨ (y ≡ suc x)
         lemma (inj₁ p) = inj₂ (sym p)

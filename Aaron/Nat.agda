@@ -111,6 +111,12 @@ x ≤ y = (x < y) ∨ (x =ℕ y)
 ≤-trans {suc x} {suc y} {zero} p₁ ()
 ≤-trans {suc x} {suc y} {suc z} = ≤-trans {x} {y} {z}
 
+≤-total : ∀ {x y : ℕ} → x ≤ y ≡ ⊥ → y ≤ x ≡ ⊤
+≤-total {zero} {zero} p = refl
+≤-total {zero} {suc y} ()
+≤-total {suc x} {zero} p = refl
+≤-total {suc x} {suc y} p rewrite ≤-total {x} {y} p = refl
+
 =ℕ-refl : ∀ (x : ℕ) → x =ℕ x ≡ ⊤
 =ℕ-refl zero = refl
 =ℕ-refl (suc x) = =ℕ-refl x
