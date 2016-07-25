@@ -1,7 +1,7 @@
 module Nat where
 
 open import Bool
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation using (_≡_; refl; 𝔹-contra)
 
 
 data ℕ : Set where
@@ -110,7 +110,7 @@ x ≤ y = (x < y) ∨ (x =ℕ y)
 
 =ℕ-to-≡ : ∀ {x y : ℕ} → x =ℕ y ≡ ⊤ → x ≡ y
 =ℕ-to-≡ {0} {0} p = refl
-=ℕ-to-≡ {0} {suc y} () 
+=ℕ-to-≡ {0} {suc y} ()
 =ℕ-to-≡ {suc x} {0} ()
 =ℕ-to-≡ {suc x} {suc y} p rewrite =ℕ-to-≡ {x} {y} p = refl
 

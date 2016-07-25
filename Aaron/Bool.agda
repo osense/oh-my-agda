@@ -1,12 +1,7 @@
 module Bool where
 
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
-
 
 data 𝔹 : Set where ⊤ ⊥ : 𝔹
-
-𝔹-contra : ⊥ ≡ ⊤ → ∀ {P : Set} → P
-𝔹-contra ()
 
 _∧_ : 𝔹 → 𝔹 → 𝔹
 ⊤ ∧ y = y

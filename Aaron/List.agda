@@ -1,8 +1,8 @@
 module List where
 
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong₂)
 open import Nat using (ℕ; zero; suc; _+_; _≤_; ≤-trans; ≤-suc)
 open import Bool
+open import Relation using (_≡_; refl; cong₂; inspect; _with≡_)
 
 data List {l} (A : Set l) : Set l where
   [] : List A
@@ -66,13 +66,6 @@ length-filter p [] = refl
 length-filter p (x :: l) with p x
 length-filter p (x :: l) | ⊤ = length-filter p l
 length-filter p (x :: l) | ⊥ = ≤-trans {length (filter p l)} (length-filter p l) (≤-suc (length l))
-
-
-data Singleton {l} {A : Set l} (x : A) : Set l where
-  _with≡_ : (y : A) → x ≡ y → Singleton x
-
-inspect : ∀ {l} {A : Set l} (x : A) → Singleton x
-inspect x = x with≡ refl
 
 
 filter-idem : ∀ {l} {A : Set l} → (p : A → 𝔹) → (l : List A) → filter p (filter p l) ≡ filter p l

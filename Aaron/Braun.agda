@@ -1,5 +1,5 @@
 open import Agda.Primitive using (_⊔_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
+open import Relation using (_≡_; refl; sym)
 open import Data.Product using (_×_; _,_)
 open import Nat using (ℕ; suc; zero; _+_; suc-inj; +0; +suc; +comm)
 open import Bool hiding (_∨_)
