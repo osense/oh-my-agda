@@ -17,6 +17,6 @@ search : ∀ {l u} → (d : A) → Bst l u → Maybe (Σ A (λ d' → d ≡ d'))
 search d (leaf _) = nothing
 search d (node d' l r _ _) with inspect (d ≤A d')
 search d (node d' l r _ _) | ⊤ with≡ p₁ with inspect (d' ≤A d)
-search d (node d' l r _ _) | ⊤ with≡ p₁ | ⊤ with≡ p₂ rewrite ≤-antisym p₁ p₂ = just (d' , refl)
-search d (node d' l r _ _) | ⊤ with≡ p₁ | false with≡ p₂ = search d l
-search d (node d' l r _ _) | false with≡ p₁ = search d r
+search d (node d' l r _ _) | ⊤ with≡ p₁ | ⊤ with≡ p₂ = just (d' , ≤-antisym p₁ p₂)
+search d (node d' l r _ _) | ⊤ with≡ p₁ | ⊥ with≡ p₂ = search d l
+search d (node d' l r _ _) | ⊥ with≡ p₁ = search d r
