@@ -1,7 +1,7 @@
 module Relation where
 
 open import Agda.Primitive using (_⊔_)
-open import Bool using (𝔹; ⊤; ⊥; _∧_)
+open import Bool using (𝔹; ⊤; ⊥; _∧_; if_then_else)
 
 
 data _≡_ {l} {A : Set l} (x : A) : A → Set l where
@@ -42,13 +42,6 @@ transitive _≥_ = ∀ {a b c} → a ≥ b ≡ ⊤ → b ≥ c ≡ ⊤ → a ≥
 
 total : ∀ {l} {A : Set l} → (_≥A_ : A → A → 𝔹) → Set l
 total _≥_ = ∀ {a b} → a ≥ b ≡ ⊥ → b ≥ a ≡ ⊤
-
-
-_iso𝔹_ : ∀ {l} {A : Set l} → A → A → (_≥A_ : A → A → 𝔹) → 𝔹
-(d iso𝔹 d') _≥_ = (d ≥ d') ∧ (d' ≥ d)
-
-iso𝔹-intro : ∀ {l} {A : Set l} {_≥A_ : A → A → 𝔹} {x y : A} → x ≥A y ≡ ⊤ → y ≥A x ≡ ⊤ → ((x iso𝔹 y) _≥A_) ≡ ⊤
-iso𝔹-intro {x = x} {y = y} p₁ p₂ rewrite p₁ | p₂ = refl
 
 
 total-reflexive : ∀ {l} {A : Set l} → (_≥A_ : A → A → 𝔹) → total _≥A_ → reflexive _≥A_
