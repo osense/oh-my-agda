@@ -34,6 +34,9 @@ inspect x = x with≡ refl
 reflexive : ∀ {l} {A : Set l} → (_≥A_ : A → A → 𝔹) → Set l
 reflexive _≥_ = ∀ {a} → a ≥ a ≡ ⊤
 
+antisym : ∀ {l} {A : Set l} → (_≥A_ : A → A → 𝔹) → Set l
+antisym _≥_ = ∀ {a b} → a ≥ b ≡ ⊤ → b ≥ a ≡ ⊤ → a ≡ b 
+
 transitive : ∀ {l} {A : Set l} → (_≥A_ : A → A → 𝔹) → Set l
 transitive _≥_ = ∀ {a b c} → a ≥ b ≡ ⊤ → b ≥ c ≡ ⊤ → a ≥ c ≡ ⊤
 
@@ -52,5 +55,4 @@ total-reflexive : ∀ {l} {A : Set l} → (_≥A_ : A → A → 𝔹) → total 
 total-reflexive _≥_ tot {a} with inspect (a ≥ a)
 total-reflexive _≥_ tot {a} | ⊤ with≡ p = p
 total-reflexive _≥_ tot {a} | ⊥ with≡ p = tot p
-
 

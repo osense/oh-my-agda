@@ -1,7 +1,7 @@
 module Nat where
 
 open import Bool
-open import Relation using (_≡_; refl; 𝔹-contra)
+open import Relation using (_≡_; refl; 𝔹-contra; antisym)
 
 
 data ℕ : Set where
@@ -103,6 +103,12 @@ x ≤ y = (x < y) ∨ (x =ℕ y)
 ≤-total {zero} {suc y} ()
 ≤-total {suc x} {zero} p = refl
 ≤-total {suc x} {suc y} p rewrite ≤-total {x} {y} p = refl
+
+≤-antisym : antisym _≤_
+≤-antisym {zero} {zero} p₁ p₂ = refl
+≤-antisym {zero} {suc b} p₁ ()
+≤-antisym {suc a} {zero} ()
+≤-antisym {suc a} {suc b} p₁ p₂ rewrite ≤-antisym {a} {b} p₁ p₂ = refl
 
 =ℕ-refl : ∀ (x : ℕ) → x =ℕ x ≡ ⊤
 =ℕ-refl zero = refl
