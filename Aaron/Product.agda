@@ -7,6 +7,11 @@ record Σ {l} (A : Set l) (B : A → Set l) : Set l where
     fst : A
     snd : B fst
 open Σ public
+infixr 6 _,_
+
+_×_ : ∀ {l} (A B : Set l) → Set l
+a × b = Σ a (λ _ → b)
+infixr 6 _×_
 
 
 data Maybe {l} (A : Set l) : Set l where

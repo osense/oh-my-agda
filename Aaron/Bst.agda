@@ -43,3 +43,10 @@ insert d (node d' L R p₁ p₂) | ⊤ with≡ p with insert d L
 insert d (node d' L R p₁ p₂) | ⊤ with≡ p | L' rewrite p = node d' L' (inc-ub R (≤-trans p₂ max-≤2)) (min-mono p₁) ≤-refl
 insert d (node d' L R p₁ p₂) | ⊥ with≡ p with insert d R
 insert d (node d' L R p₁ p₂) | ⊥ with≡ p | R' rewrite p = node d' (dec-lb L p₁) R' min-≤2 (max-mono p₂)
+
+
+remove-min : ∀ {l u} → Bst l u → Bst l u
+remove-min (leaf x) = leaf x
+remove-min (node d (leaf l) (leaf r) p₁ p₂) = leaf (≤-trans (≤-trans (≤-trans p₁ l) r) p₂)
+remove-min (node d (leaf x) (node d' L' R' p₁' p₂') p₁ p₂) = node d' L' R' (≤-trans (≤-trans p₁ x) p₁') (≤-trans p₂' p₂)
+remove-min (node d (node d' L' R' p₁' p₂') R p₁ p₂) = node d (remove-min (node d' L' R' p₁' p₂')) R p₁ p₂

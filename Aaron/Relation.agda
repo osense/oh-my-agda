@@ -15,6 +15,9 @@ infixr 4 _≡_
 sym : ∀ {l} {A : Set l} {a b : A} → a ≡ b → b ≡ a
 sym p rewrite p = refl
 
+cong : ∀ {l} {A B : Set l} {a a' : A} → (f : A → B) → a ≡ a' → f a ≡ f a'
+cong f p rewrite p = refl
+
 cong₂ : ∀ {l} {A B C : Set l} {a₁ a₂ : A} {b₁ b₂ : B}
         → (f : A → B → C) → a₁ ≡ a₂ → b₁ ≡ b₂ → f a₁ b₁ ≡ f a₂ b₂
 cong₂ f p₁ p₂ rewrite p₁ | p₂ = refl
