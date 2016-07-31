@@ -201,8 +201,11 @@ monoidNat = record {ε = zero ; _∙_ = _+ℕ_ }
 
 applicativePointwise : ∀ {F G} {X : Set} → Applicative F → Applicative G → Applicative (λ X → (F X) × (G X))
 applicativePointwise F G = record
-  {pure = λ x → pure x , pure x
-    ;_⊛_ = λ h x → (fst h ⊛ fst x) , (snd h ⊛ snd x)}
+  {pure = λ x → (Applicative.pure F) x , (Applicative.pure G) x
+  ;_⊛_ = λ h x → (fst h ⊛F fst x) , (snd h ⊛G snd x)}
+    where _⊛F_ = Applicative._⊛_ F
+          _⊛G_ = Applicative._⊛_ G
+
 
 
 record Traversable (F : Set → Set) : Set1 where
@@ -262,6 +265,7 @@ subst refl P p = p
 
 {-# BUILTIN EQUALITY _≃_ #-}
 {-# BUILTIN REFL refl #-}
+
 
 record MonoidOk X {{M : Monoid X}} : Set where
   field

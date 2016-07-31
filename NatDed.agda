@@ -1,4 +1,4 @@
-module Logic where
+module NatDed where
 
 data _∧_ (P : Set) (Q : Set) : Set where
   _,_ : P → Q → (P ∧ Q)
@@ -13,7 +13,7 @@ data _∧_ (P : Set) (Q : Set) : Set where
 ∧-comm' (p , q) = (q , p)
 
 
-_⇔_ : (P : Set) → (Q : Set) → Set
+_⇔_ : Set → Set → Set
 p ⇔ q = (p → q) ∧ (q → p)
 
 ∧-comm : {P Q : Set} → (P ∧ Q) ⇔ (Q ∧ P)
@@ -23,7 +23,7 @@ p ⇔ q = (p → q) ∧ (q → p)
 ∧-assoc¹ : {P Q R : Set} → (P ∧ (Q ∧ R)) → ((P ∧ Q) ∧ R)
 ∧-assoc¹ (p , (q , r)) = ((p , q) , r)
 
-∧-assoc² : {P Q R : Set} → ((P ∧ Q) ∧ R) → (P ∧ (Q ∧ R)) 
+∧-assoc² : {P Q R : Set} → ((P ∧ Q) ∧ R) → (P ∧ (Q ∧ R))
 ∧-assoc² ((p , q) , r) = (p , (q , r))
 
 ∧-assoc : {P Q R : Set} → (P ∧ (Q ∧ R)) ⇔ ((P ∧ Q) ∧ R)
