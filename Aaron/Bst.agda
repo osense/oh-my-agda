@@ -1,4 +1,4 @@
-open import Relation using (_≡_; refl; inspect; _with≡_; reflexive; antisym; transitive; total)
+open import Relation using (_≡_; refl; ¬_; inspect; _with≡_; reflexive; antisym; transitive; total)
 open import Bool
 open import Product
 
@@ -26,6 +26,16 @@ search d (node d' l r _ _) | ⊤ with≡ p₁ | ⊤ with≡ p₂ = just (d' , �
 search d (node d' l r _ _) | ⊤ with≡ p₁ | ⊥ with≡ p₂ = search d l
 search d (node d' l r _ _) | ⊥ with≡ p₁ = search d r
 
+get-min : ∀ {l u} → Bst l u → Maybe A
+get-min (leaf x) = nothing
+get-min (node d (leaf x) r p₁ p₂) = just d
+get-min (node d l r p₁ p₂) = get-min l
+
+get-max : ∀ {l u} → Bst l u → Maybe A
+get-max (leaf x) = nothing
+get-max (node d l (leaf x) p₁ p₂) = just d
+get-max (node d l r p₁ p₂) = get-max r
+
 
 dec-lb : {l l' u : A} → Bst l u → l' ≤A l ≡ ⊤ → Bst l' u
 dec-lb (leaf p') p = leaf (≤-trans p p')
@@ -50,3 +60,24 @@ remove-min (leaf x) = leaf x
 remove-min (node d (leaf l) (leaf r) p₁ p₂) = leaf (≤-trans (≤-trans (≤-trans p₁ l) r) p₂)
 remove-min (node d (leaf x) (node d' L' R' p₁' p₂') p₁ p₂) = node d' L' R' (≤-trans (≤-trans p₁ x) p₁') (≤-trans p₂' p₂)
 remove-min (node d (node d' L' R' p₁' p₂') R p₁ p₂) = node d (remove-min (node d' L' R' p₁' p₂')) R p₁ p₂
+
+remove-max : ∀ {l u} → Bst l u → Bst l u
+remove-max (leaf x) = leaf x
+remove-max (node d (leaf l) (leaf r) p₁ p₂) = leaf (≤-trans (≤-trans (≤-trans p₁ l) r ) p₂)
+remove-max (node d (node d' L' R' p₁' p₂') (leaf x) p₁ p₂) = node d' L' R' (≤-trans p₁ p₁') (≤-trans (≤-trans p₂' x) p₂)
+remove-max (node d L (node d' L' R' p₁' p₂') p₁ p₂) = node d L (remove-min (node d' L' R' p₁' p₂')) p₁ p₂
+
+-- This thing is hell.
+remove : ∀ {l u} → A → Bst l u → Bst l u
+remove v (leaf x) = leaf x
+remove v (node d l r p₁ p₂) with (v ≤A d) | (d ≤A v)
+remove v (node d l r p₁ p₂) | ⊥ | ⊥ = {!!} -- Absurd. How to tell Agda?
+remove v (node d l r p₁ p₂) | ⊤ | ⊥ = node d (remove v l) r p₁ p₂
+remove v (node d l r p₁ p₂) | ⊥ | ⊤ = node d l (remove v r) p₁ p₂
+remove v (node d l r p₁ p₂) | ⊤ | ⊤ with get-min r | remove-min r
+remove v (node d (leaf x) (leaf x') p₁ p₂) | ⊤ | ⊤ | _ | _ = leaf (≤-trans (≤-trans (≤-trans p₁ x) x') p₂)
+remove v (node d (leaf x) (node d' l' r' p₁' p₂') p₁ p₂) | ⊤ | ⊤ | _ | _ = node d' l' r' (≤-trans (≤-trans p₁ x) p₁') (≤-trans p₂' p₂)
+remove v (node d (node d' l' r' p₁' p₂') (leaf x) p₁ p₂) | ⊤ | ⊤ | _ | _ = node d' l' r' (≤-trans p₁ p₁') (≤-trans (≤-trans p₂' x) p₂)
+remove v (node d (node d' l' r' p₁' p₂') (node d'' l'' r'' p₁'' p₂'') p₁ p₂) | ⊤ | ⊤ | nothing | _ = {!!} -- Absurd?
+remove v (node d (node d' l' r' p₁' p₂') (node d'' l'' r'' p₁'' p₂'') p₁ p₂) | ⊤ | ⊤ | just newD | (leaf x) = {!!}
+remove v (node d (node d' l' r' p₁' p₂') (node d'' l'' r'' p₁'' p₂'') p₁ p₂) | ⊤ | ⊤ | just newD | (node nd nl nr np₁ np₂) = {!!}

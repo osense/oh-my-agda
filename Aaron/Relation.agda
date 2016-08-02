@@ -12,6 +12,21 @@ infixr 4 _≡_
 {-# BUILTIN REFL refl #-}
 
 
+data Empty : Set where
+
+Empty-elim : ∀ {l} {P : Set l} → Empty → P
+Empty-elim ()
+
+¬_ : ∀ {l} → Set l → Set l
+¬ P = P → Empty
+
+Empty-contra : ∀ {l} {P Q : Set l} → P → ¬ P → Q
+Empty-contra p np = Empty-elim (np p)
+
+𝔹-contra : ⊥ ≡ ⊤ → ∀ {P : Set} → P
+𝔹-contra ()
+
+
 sym : ∀ {l} {A : Set l} {a b : A} → a ≡ b → b ≡ a
 sym p rewrite p = refl
 
@@ -21,10 +36,6 @@ cong f p rewrite p = refl
 cong₂ : ∀ {l} {A B C : Set l} {a₁ a₂ : A} {b₁ b₂ : B}
         → (f : A → B → C) → a₁ ≡ a₂ → b₁ ≡ b₂ → f a₁ b₁ ≡ f a₂ b₂
 cong₂ f p₁ p₂ rewrite p₁ | p₂ = refl
-
-
-𝔹-contra : ⊥ ≡ ⊤ → ∀ {P : Set} → P
-𝔹-contra ()
 
 
 data Singleton {l} {A : Set l} (x : A) : Set l where
@@ -38,7 +49,7 @@ reflexive : ∀ {l} {A : Set l} → (_≥A_ : A → A → 𝔹) → Set l
 reflexive _≥_ = ∀ {a} → a ≥ a ≡ ⊤
 
 antisym : ∀ {l} {A : Set l} → (_≥A_ : A → A → 𝔹) → Set l
-antisym _≥_ = ∀ {a b} → a ≥ b ≡ ⊤ → b ≥ a ≡ ⊤ → a ≡ b 
+antisym _≥_ = ∀ {a b} → a ≥ b ≡ ⊤ → b ≥ a ≡ ⊤ → a ≡ b
 
 transitive : ∀ {l} {A : Set l} → (_≥A_ : A → A → 𝔹) → Set l
 transitive _≥_ = ∀ {a b c} → a ≥ b ≡ ⊤ → b ≥ c ≡ ⊤ → a ≥ c ≡ ⊤
