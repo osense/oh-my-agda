@@ -48,8 +48,7 @@ remove-min (node a (node {n₁} {m₁} a₁ l₁ r₁ p₁) (node {n₂} {m₂} 
 
 
 list-to-braun : (l : List A) → BraunT (length l)
-list-to-braun [] = empty
-list-to-braun (x :: xs) = insert x (list-to-braun xs)
+list-to-braun xs = fold (λ l → BraunT (length l)) insert empty xs
 
 merge : List A → List A → List A
 merge [] ys = ys

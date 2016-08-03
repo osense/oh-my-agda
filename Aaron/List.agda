@@ -22,6 +22,10 @@ map : ∀ {l l'} {A : Set l} {B : Set l'} → (A → B) → List A → List B
 map f [] = []
 map f (x :: xs) = f x :: map f xs
 
+fold : ∀ {l l'} {A : Set l} (P : List A → Set l') → (∀ {a l} → A → P l → P (a :: l)) → P [] → (l : List A) → P l
+fold p f init [] = init
+fold p f init (x :: xs) = f x (fold p f init xs)
+
 filter : ∀ {l} {A : Set l} → (A → 𝔹) → List A → List A
 filter p [] = []
 filter p (x :: xs) = let r = filter p xs in if p x then x :: r else r
