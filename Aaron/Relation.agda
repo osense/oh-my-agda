@@ -11,6 +11,8 @@ infixr 4 _≡_
 {-# BUILTIN EQUALITY _≡_ #-}
 {-# BUILTIN REFL refl #-}
 
+data Unit : Set where
+  U : Unit
 
 data Empty : Set where
 
