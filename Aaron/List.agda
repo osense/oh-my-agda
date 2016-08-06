@@ -3,6 +3,7 @@ module List where
 open import Nat using (ℕ; zero; suc; _+_; _≤_; ≤-trans; ≤-suc)
 open import Bool
 open import Relation using (_≡_; refl; cong₂; inspect; _with≡_)
+open import Product using (_∘_)
 
 data List {l} (A : Set l) : Set l where
   [] : List A
@@ -57,6 +58,10 @@ nthTail (suc n) [] = []
 nthTail (suc n) (x :: xs) = nthTail n xs
 
 
+++-[] : ∀ {l }{A : Set l} → (l : List A) → (l ++ []) ≡ l
+++-[] [] = refl
+++-[] (x :: l) = cong₂ _::_ refl (++-[] l)
+
 length-++ : ∀ {l} {A : Set l} (l₁ l₂ : List A) → length (l₁ ++ l₂) ≡ (length l₁) + (length l₂)
 length-++ [] l₂ = refl
 length-++ (x :: l₁) l₂ rewrite length-++ l₁ l₂ = refl
@@ -64,6 +69,16 @@ length-++ (x :: l₁) l₂ rewrite length-++ l₁ l₂ = refl
 ++-assoc : ∀ {l} {A : Set l} (l₁ l₂ l₃ : List A) → (l₁ ++ l₂) ++ l₃ ≡ l₁ ++ (l₂ ++ l₃)
 ++-assoc [] l₂ l₃ = refl
 ++-assoc (x :: l₁) l₂ l₃ rewrite ++-assoc l₁ l₂ l₃ = refl
+
+map-++ : ∀ {l} {A B : Set l} → (f : A → B) → (l₁ l₂ : List A) →
+         map f (l₁ ++ l₂) ≡ (map f l₁) ++ (map f l₂)
+map-++ f [] l₂ = refl
+map-++ f (x :: l₁) l₂ = cong₂ _::_ refl (map-++ f l₁ l₂)
+
+map-∘ : ∀ {l} {A B C : Set l} → (f : B → C) → (g : A → B) → (l : List A) →
+        map f (map g l) ≡ map (f ∘ g) l
+map-∘ f g [] = refl
+map-∘ f g (x :: l) = cong₂ _::_ refl (map-∘ f g l)
 
 length-filter : ∀ {l} {A : Set l} → (p : A → 𝔹) → (l : List A) → length (filter p l) ≤ length l ≡ ⊤
 length-filter p [] = refl
