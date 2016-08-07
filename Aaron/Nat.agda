@@ -1,7 +1,8 @@
 module Nat where
 
 open import Bool
-open import Relation using (_≡_; refl; 𝔹-contra; antisym)
+open import Relation using (_≡_; refl; 𝔹-contra; cong; antisym)
+open import Product renaming (_+_ to _⊎_)
 
 
 data ℕ : Set where
@@ -67,6 +68,9 @@ zero < suc y = ⊤
 suc x < zero = ⊥
 suc x < suc y = x < y
 
+_>_ : ℕ → ℕ → 𝔹
+a > b = b < a
+
 <-0 : ∀ (x : ℕ) → x < 0 ≡ ⊥
 <-0 zero = refl
 <-0 (suc x) = refl
@@ -77,6 +81,14 @@ suc x < suc y = x < y
 <-trans {0} {suc y} {suc z} p₁ p₂ = refl
 <-trans {suc x} {suc y} {0} p₁ ()
 <-trans {suc x} {suc y} {suc z} p₁ p₂ = <-trans {x} {y} {z} p₁ p₂
+
+<-drop : ∀ {x y} → (x < (suc y) ≡ ⊤) → (x ≡ y) ⊎ (x < y ≡ ⊤)
+<-drop {zero} {zero} p = ⊤ , refl
+<-drop {zero} {suc y} p = ⊥ , refl
+<-drop {suc x} {zero} p rewrite <-0 x = 𝔹-contra p
+<-drop {suc x} {suc y} p with <-drop {x} {y} p
+<-drop {suc x} {suc y} p | ⊤ , q = ⊤ , cong suc q
+<-drop {suc x} {suc y} p | ⊥ , q = ⊥ , q
 
 
 _=ℕ_ : ℕ → ℕ → 𝔹
