@@ -28,16 +28,19 @@ Empty-contra p np = Empty-elim (np p)
 𝔹-contra : ⊥ ≡ ⊤ → ∀ {P : Set} → P
 𝔹-contra ()
 
+_≢_ : ∀ {l} {A : Set l} → A → A → Set l
+A ≢ B = ¬(A ≡ B)
+
 
 sym : ∀ {l} {A : Set l} {a b : A} → a ≡ b → b ≡ a
-sym p rewrite p = refl
+sym refl = refl
 
 cong : ∀ {l} {A B : Set l} {a a' : A} → (f : A → B) → a ≡ a' → f a ≡ f a'
-cong f p rewrite p = refl
+cong f refl = refl
 
 cong₂ : ∀ {l} {A B C : Set l} {a₁ a₂ : A} {b₁ b₂ : B}
         → (f : A → B → C) → a₁ ≡ a₂ → b₁ ≡ b₂ → f a₁ b₁ ≡ f a₂ b₂
-cong₂ f p₁ p₂ rewrite p₁ | p₂ = refl
+cong₂ f refl refl = refl
 
 
 data Singleton {l} {A : Set l} (x : A) : Set l where
