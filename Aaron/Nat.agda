@@ -90,6 +90,21 @@ a > b = b < a
 <-drop {suc x} {suc y} p | ⊤ , q = ⊤ , cong suc q
 <-drop {suc x} {suc y} p | ⊥ , q = ⊥ , q
 
+<-mono₂ : ∀ {a b c} → a > b ≡ ⊤ → (a + c) > (b + c) ≡ ⊤
+<-mono₂ {a} {b} {zero} p rewrite +0 a | +0 b = p
+<-mono₂ {a} {b} {suc c} p rewrite +suc b c | +suc a c = <-mono₂ {a} {b} {c} p
+
+<-mono₂' : ∀ {a b c} → a > b ≡ ⊤ → (c + a) > (c + b) ≡ ⊤
+<-mono₂' {a} {b} {c} p rewrite +comm c a | +comm c b = <-mono₂ {a} {b} {c} p
+
+<-suc+ : ∀ {a b} → suc (a + b) > a ≡ ⊤
+<-suc+ {zero} = refl
+<-suc+ {suc a} = <-suc+ {a}
+
+<-suc : ∀ {a} → suc a > a ≡ ⊤
+<-suc {zero} = refl
+<-suc {suc a} = <-suc {a}
+
 
 _=ℕ_ : ℕ → ℕ → 𝔹
 0 =ℕ 0 = ⊤

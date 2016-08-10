@@ -32,6 +32,11 @@ _≢_ : ∀ {l} {A : Set l} → A → A → Set l
 A ≢ B = ¬(A ≡ B)
 
 
+∧-elim₁ : ∀ {A B} → A ∧ B ≡ ⊤ → A ≡ ⊤
+∧-elim₁ {⊤} p = refl
+∧-elim₁ {⊥} ()
+
+
 sym : ∀ {l} {A : Set l} {a b : A} → a ≡ b → b ≡ a
 sym refl = refl
 
