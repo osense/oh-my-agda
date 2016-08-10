@@ -36,6 +36,10 @@ A ≢ B = ¬(A ≡ B)
 ∧-elim₁ {⊤} p = refl
 ∧-elim₁ {⊥} ()
 
+∧-elim₂ : ∀ {A B} → A ∧ B ≡ ⊤ → B ≡ ⊤
+∧-elim₂ {⊤} p = p
+∧-elim₂ {⊥} ()
+
 
 sym : ∀ {l} {A : Set l} {a b : A} → a ≡ b → b ≡ a
 sym refl = refl
