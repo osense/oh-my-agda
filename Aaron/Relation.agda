@@ -40,6 +40,11 @@ A ≢ B = ¬(A ≡ B)
 ∧-elim₂ {⊤} p = p
 ∧-elim₂ {⊥} ()
 
+∧-intro : ∀ {A B} → A ≡ ⊤ → B ≡ ⊤ → (A ∧ B) ≡ ⊤
+∧-intro {⊤} {⊤} p₁ p₂ = refl
+∧-intro {⊤} {⊥} p₁ ()
+∧-intro {⊥} ()
+
 
 sym : ∀ {l} {A : Set l} {a b : A} → a ≡ b → b ≡ a
 sym refl = refl
