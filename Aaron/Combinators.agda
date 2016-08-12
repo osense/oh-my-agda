@@ -61,7 +61,7 @@ open measure {A = Sfree-comb}
              _↝Sfree_
              (λ x y → x > y ≡ ⊤)
              Sfree-size
-             Sfree-comb-↝-size<
+             (λ {a} {b} → Sfree-comb-↝-size< {a} {b})
 
 Sfree-terminates-h : ∀ {a} {p : Sfree a ≡ ⊤} → ↓ _↝Sfree_ (a , p) → ↓ _↝_ a
 Sfree-terminates-h {a} {p} (pf↓ x) = pf↓ h
