@@ -48,6 +48,7 @@ infixr 6 _↝_
 
 _↝⁺_ : Comb → Comb → Set
 _↝⁺_ = Tc {_>A_ = _↝_}
+infixr 6 _↝⁺_
 
 
 trans-Cong₁ : ∀ {a a'} b → a ↝⁺ a' → (a ⋅ b) ↝⁺ (a' ⋅ b)
@@ -69,3 +70,27 @@ trans-Cong₂ a (trans r₁ r₂) = trans (trans-Cong₂ a r₁) (trans-Cong₂ 
                        (trans
                          (trans-Cong₁ ((λ* s c₂) ⋅ b) (λ*-↝ c₁ b s))
                          (trans-Cong₂ (subst b s c₁) (λ*-↝ c₂ b s) ))
+
+
+
+fst : Comb
+fst = λ* "x" (λ* "y" (var "x"))
+
+snd : Comb
+snd = λ* "x" (λ* "y" (var "y"))
+
+app : Comb
+app = λ* "s" (λ* "z" ((var "s") ⋅ (var "z")))
+
+self : Comb
+self = λ* "x" ((var "x") ⋅ (var "x"))
+
+
+reduction₁ : K ⋅ K ⋅ (K ⋅ K ⋅ K) ↝ K ⋅ K ⋅ K
+reduction₁ = ↝Cong₂ ↝K
+
+reduction₂ : K ⋅ K ⋅ (K ⋅ K ⋅ K) ↝ K
+reduction₂ = ↝K
+
+reduction₃ : K ⋅ K ⋅ (K ⋅ K ⋅ K) ↝⁺ K
+reduction₃ = trans (step (↝Cong₂ ↝K)) (step ↝K) -- Why reduce in 1 step, when you can in 2?
