@@ -3,6 +3,11 @@ module Bool where
 
 data 𝔹 : Set where ⊤ ⊥ : 𝔹
 
+{-# BUILTIN BOOL 𝔹 #-}
+{-# BUILTIN TRUE ⊤ #-}
+{-# BUILTIN FALSE ⊥ #-}
+
+
 ¬_ : 𝔹 → 𝔹
 ¬ ⊤ = ⊥
 ¬ ⊥ = ⊤
