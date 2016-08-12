@@ -76,6 +76,11 @@ transitive _≥_ = ∀ {a b c} → a ≥ b ≡ ⊤ → b ≥ c ≡ ⊤ → a ≥
 total : ∀ {l} {A : Set l} → (_≥A_ : A → A → 𝔹) → Set l
 total _≥_ = ∀ {a b} → a ≥ b ≡ ⊥ → b ≥ a ≡ ⊤
 
+reflexiveS : ∀ {l l'} {A : Set l} (_>A_ : A → A → Set (l ⊔ l')) → Set (l ⊔ l')
+reflexiveS _>A_ = ∀ {a} → a >A a
+
+transitiveS : ∀ {l l'} {A : Set l} (_>A_ : A → A → Set (l ⊔ l')) → Set (l ⊔ l')
+transitiveS _>A_ = ∀ {a b c} → a >A b → b >A c → a >A c
 
 total-reflexive : ∀ {l} {A : Set l} → (_≥A_ : A → A → 𝔹) → total _≥A_ → reflexive _≥A_
 total-reflexive _≥_ tot {a} with inspect (a ≥ a)
@@ -87,8 +92,5 @@ data Tc {l l'} {A : Set l} {_>A_ : A → A → Set l'} : A → A → Set (l ⊔ 
   step : ∀ {a b} → a >A b → Tc a b
   trans : ∀ {a b c} → Tc {l} {l'} {A} {_>A_} a b → Tc {l} {l'} {A} {_>A_} b c → Tc a c
 
-transitive' : ∀ {l l'} {A : Set l} (_>A_ : A → A → Set (l ⊔ l')) → Set (l ⊔ l')
-transitive' _>A_ = ∀ {a b c} → a >A b → b >A c → a >A c
-
-Tc-transitive : ∀ {l l'} {A : Set l} {_>A_ : A → A → Set l'} → transitive' {l} {l'} (Tc {l} {l'} {A} {_>A_})
+Tc-transitive : ∀ {l l'} {A : Set l} {_>A_ : A → A → Set l'} → transitiveS {l} {l'} (Tc {l} {l'} {A} {_>A_})
 Tc-transitive = trans
