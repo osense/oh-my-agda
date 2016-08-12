@@ -82,3 +82,13 @@ total-reflexive _≥_ tot {a} with inspect (a ≥ a)
 total-reflexive _≥_ tot {a} | ⊤ with≡ p = p
 total-reflexive _≥_ tot {a} | ⊥ with≡ p = tot p
 
+
+data Tc {l l'} {A : Set l} {_>A_ : A → A → Set l'} : A → A → Set (l ⊔ l') where
+  step : ∀ {a b} → a >A b → Tc a b
+  trans : ∀ {a b c} → Tc {l} {l'} {A} {_>A_} a b → Tc {l} {l'} {A} {_>A_} b c → Tc a c
+
+transitive' : ∀ {l l'} {A : Set l} (_>A_ : A → A → Set (l ⊔ l')) → Set (l ⊔ l')
+transitive' _>A_ = ∀ {a b c} → a >A b → b >A c → a >A c
+
+Tc-transitive : ∀ {l l'} {A : Set l} {_>A_ : A → A → Set l'} → transitive' {l} {l'} (Tc {l} {l'} {A} {_>A_})
+Tc-transitive = trans
