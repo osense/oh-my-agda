@@ -1,7 +1,7 @@
 module Nat where
 
 open import Bool
-open import Relation using (_≡_; refl; 𝔹-contra; cong; antisym)
+open import Relation using (_≡_; refl; _≢_; 𝔹-contra; cong; antisym)
 open import Product renaming (_+_ to _⊎_)
 
 
@@ -16,8 +16,15 @@ zero + n = n
 (suc m) + n = suc (m + n)
 infixl 8 _+_
 
-suc-inj : ∀ {x y : ℕ} → suc x ≡ suc y → x ≡ y
+suc-inj : ∀ {x y} → suc x ≡ suc y → x ≡ y
 suc-inj refl = refl
+
+zero-img : ∀ n → suc n ≢ 0
+zero-img n ()
+
+induction : {P : ℕ → Set} → P 0 → (∀ n → P n → P (suc n)) → (∀ n → P n)
+induction p0 f 0 = p0
+induction p0 f (suc n) = f n (induction p0 f n)
 
 +0 : ∀ (x : ℕ) → x + zero ≡ x
 +0 zero = refl
